@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import List
 from order import Order
 
-@dataclass
+@dataclass(frozen=True)
 class Receipt:
     orders: List[Order]
     total: float

@@ -14,6 +14,4 @@ class Person:
     @abstractproperty
     def age(self):
         pass
-
-    
-    
+        

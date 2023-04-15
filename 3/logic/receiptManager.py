@@ -1,5 +1,5 @@
 from typing import List
-from receipt import Receipt
+from model.receipt import Receipt
 
 class ReceiptManager:
     def __init__(self):

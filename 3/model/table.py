@@ -12,3 +12,8 @@ class Table:
     def mark_as_unavailable(self, order):
         self.is_available = False
         self.order = order
+
+    def __eq__(self, other):
+        if not isinstance(other, Table):
+            return False
+        return self.number == other.number and self.capacity == other.capacity
