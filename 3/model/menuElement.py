@@ -5,6 +5,7 @@ class MenuElement(ABC):
         self.name = name
         self.description = description
         self.price = price
+        self.kitchen
 
     @abstractmethod
     def add_to_order(self, order):
