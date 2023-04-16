@@ -14,4 +14,9 @@ class Person:
     @abstractproperty
     def age(self):
         pass
-        
+    
+
+    def __eq__(self, other):
+        if not isinstance(other, self.__class__):
+            return False
+        return self.phone == other.phone and self.birthdate == other.birthdate and self.name == other.name

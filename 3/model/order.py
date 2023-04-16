@@ -2,6 +2,7 @@
 
 class Order:
     def __init__(self):
+        self.order_id
         self.menu_elements = []
 
     def add_menu_element(self, menu_element):
@@ -19,4 +20,7 @@ class Order:
             items.append(element.get_info())
         return items
     
-    
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, self.__class__):
+            return False
+        return self.order_id == other.order_id
