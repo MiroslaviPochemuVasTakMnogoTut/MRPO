@@ -3,7 +3,7 @@ class Table:
         self.number = number
         self.capacity = 4
         self.is_available = True
-        self.waiter = None
+        self.waiter :str= ''
         
     def mark_as_available(self):
         self.is_available = True

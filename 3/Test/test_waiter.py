@@ -12,7 +12,7 @@ class TestWaiter(unittest.TestCase):
         waiter1 = Waiter("John","2000-01-01")
         waiter2 = Waiter("Mike","2000-01-01")
         table = Table(1)
-        table.mark_as_unavailable(waiter1)
+        waiter1.serve_table(table)
         self.assertEqual(waiter2.serve_table(table), f"Table {table.number} is already served by {waiter1.name}.")
 
 

@@ -8,8 +8,8 @@ class Waiter(Employee):
 
     def serve_table(self, table:Table):
         if table.is_available:
-            table.mark_as_unavailable(self)
+            table.mark_as_unavailable(self.name)##################################
             self.tables_served.append(table)
             return f"Table {table.number} is now served by {self.name}."
         else:
-            return f"Table {table.number} is already served by {table.waiter.name}."
+            return f"Table {table.number} is already served by {table.waiter}."
