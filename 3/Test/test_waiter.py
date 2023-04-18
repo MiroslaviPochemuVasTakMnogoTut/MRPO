@@ -1,18 +1,16 @@
 import unittest
 from model.waiter import Waiter
 from model.table import Table
-from model.employee import Employee
-
 class TestWaiter(unittest.TestCase):
 
     def test_serve_table_available(self):
-        waiter = Waiter("John","2000-01-01", 124)
+        waiter = Waiter("John", "2000-01-01")
         table = Table(1)
         self.assertEqual(waiter.serve_table(table), f"Table {table.number} is now served by {waiter.name}.")
 
     def test_serve_table_unavailable(self):
-        waiter1 = Waiter("John","2000-01-01", 1234)
-        waiter2 = Waiter("Mike","2000-01-01",123)
+        waiter1 = Waiter("John","2000-01-01")
+        waiter2 = Waiter("Mike","2000-01-01")
         table = Table(1)
         table.mark_as_unavailable(waiter1)
         self.assertEqual(waiter2.serve_table(table), f"Table {table.number} is already served by {waiter1.name}.")

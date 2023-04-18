@@ -6,14 +6,14 @@ class Person:
     def __init__(self, name: str, birthdate: date):
         self.name = name
         self.birthdate = birthdate
-        self.phone
-    @abstractproperty
-    def name(self):
-        return self._name
+        self.phone = None
+    # @abstractproperty
+    # def name(self):
+    #     return self._name
     
-    @abstractproperty
-    def age(self):
-        pass
+    # @abstractproperty
+    # def age(self):
+    #     pass
     
 
     def __eq__(self, other):

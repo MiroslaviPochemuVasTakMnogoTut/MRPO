@@ -3,15 +3,15 @@ class Table:
         self.number = number
         self.capacity = 4
         self.is_available = True
-        self.order = None
+        self.waiter = None
         
     def mark_as_available(self):
         self.is_available = True
         self.order = None
     
-    def mark_as_unavailable(self, order):
+    def mark_as_unavailable(self, waiter):
         self.is_available = False
-        self.order = order
+        self.waiter = waiter
 
     def __eq__(self, other):
         if not isinstance(other, Table):
