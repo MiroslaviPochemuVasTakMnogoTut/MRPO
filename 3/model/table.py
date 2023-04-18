@@ -1,7 +1,7 @@
 class Table:
-    def __init__(self, number: int, capacity: int):
+    def __init__(self, number: int):
         self.number = number
-        self.capacity = capacity
+        self.capacity = 4
         self.is_available = True
         self.order = None
         

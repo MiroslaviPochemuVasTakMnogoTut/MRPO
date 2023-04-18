@@ -2,7 +2,8 @@
 
 class Order:
     def __init__(self):
-        self.order_id
+        self.order_id = None
+        self.waiter = None
         self.menu_elements = []
 
     def add_menu_element(self, menu_element):

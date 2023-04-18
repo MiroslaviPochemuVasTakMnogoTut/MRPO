@@ -1,18 +1,18 @@
 from abc import ABC, abstractmethod
 
 class MenuElement(ABC):
-    def __init__(self, name, description, price):
+    def __init__(self, name, price):
         self.name = name
-        self.description = description
+        self.description = ''
         self.price = price
-        self.kitchen
+        self.kitchen = None
 
     @abstractmethod
     def add_to_order(self, order):
         pass
 
     def get_info(self):
-        return f'{self.name} - {self.description}, {self.price}$'
+        return f'{self.name} - ${self.price}'
     
     def __eq__(self, other):
         if type(other).__name__ == self.__class__.__name__:
@@ -22,9 +22,9 @@ class MenuElement(ABC):
 
 
 class Dish(MenuElement):
-    def __init__(self, name, description, price, cuisine_type):
-        super().__init__(name, description, price)
-        self.cuisine_type = cuisine_type
+    def __init__(self, name, price):
+        super().__init__(name, price)
+        self.cuisine_type = 'Russian'
 
     def add_to_order(self, order):
         order.add_dish(self)

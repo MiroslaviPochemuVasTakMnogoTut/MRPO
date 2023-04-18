@@ -10,6 +10,6 @@ class Waiter(Employee):
         if table.is_available:
             table.mark_as_unavailable(self)
             self.tables_served.append(table)
-            print(f"Table {table.number} is now served by {self.name}.")
+            return f"Table {table.number} is now served by {self.name}."
         else:
-            print(f"Table {table.number} is already served by {table.order.courier.name}.")
+            return f"Table {table.number} is already served by {table.order.waiter.name}."
