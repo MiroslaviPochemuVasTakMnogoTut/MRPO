@@ -2,8 +2,9 @@
 
 class Order:
     def __init__(self):
-        self.order_id = None
-        self.waiter = None
+        self.order_id      = None
+        self.customer_id   = None
+        self.waiter_id     = None
         self.menu_elements = []
 
     def add_menu_element(self, menu_element):
@@ -25,3 +26,13 @@ class Order:
         if not isinstance(other, self.__class__):
             return False
         return self.order_id == other.order_id
+    
+class dish_to_order:
+    def __init__(self):
+        self.order_id = None
+        self.item_id = None
+        
+class drink_to_order:
+    def __init__(self):
+        self.order_id = None
+        self.item_id = None

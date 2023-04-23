@@ -1,5 +1,6 @@
 class Table:
     def __init__(self, number: int):
+        self.id = None
         self.number = number
         self.capacity = 4
         self.is_available = True

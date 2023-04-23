@@ -1,9 +1,9 @@
 from employee import Employee
 
-
 class Courier(Employee):
     def __init__(self, name, birthdate, phone):
         super().__init__(name, birthdate, phone=phone)
+        self.id = None
         self.vehicle_type
         self.vehicle_number
         self.delivery_orders = []
