@@ -4,9 +4,10 @@ from datetime import date
 
 class Person:
     def __init__(self, name: str, birthdate: date):
+        self.id = None
         self.name = name
         self.birthdate = birthdate
-        self.phone = None
+        self.phone = ''
     # @abstractproperty
     # def name(self):
     #     return self._name

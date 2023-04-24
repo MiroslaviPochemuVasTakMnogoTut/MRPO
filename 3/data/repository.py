@@ -1,8 +1,10 @@
 from abc import ABC, abstractmethod
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.declarative import declarative_base
 
 
+Base = declarative_base()
  
 class Repository(ABC):
     def __init__(self):
@@ -25,6 +27,7 @@ class SQLRepository:
     def __init__(self, model_class):
         self.model_class = model_class
         engine = create_engine('postgresql://postgres:123@127.0.0.1:15432/WP')
+        Base.metadata.create_all(engine)
         Session = sessionmaker(bind=engine)
         self.session = Session() # UoW
 

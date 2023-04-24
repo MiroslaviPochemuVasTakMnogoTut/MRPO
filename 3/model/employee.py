@@ -6,9 +6,9 @@ from model.person import Person
 class Employee(Person):
     def __init__(self, name: str, birthdate: date):
         super().__init__(name, birthdate)
-        self.employee_id = None
-        self.position = None
-        self.salary = None
+        # self.id = None
+        # self.position = None
+        # self.salary = None
 
     # def __eq__(self, other):
     #     if not isinstance(other, self.__class__):
