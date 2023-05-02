@@ -15,7 +15,7 @@ class OrderManager:
 
     def create_order(self, table: Table, waiter: Waiter, items: List[str], menu) -> Order:
         # order_id = len(self.orders) + 1
-        order = Order(table_number, waiter, items)
+        order = Order(table, waiter, items)
         total = order.get_total(menu)
         order.total = total
         self.orders.append(order)

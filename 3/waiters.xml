@@ -1,0 +1,8 @@
+<waiters>
+    <waiter>
+        <id>1</id>
+        <name>John</name>
+        <birthdate>2000-01-01</birthdate>
+        <phone>1234567890</phone>
+    </waiter>
+</waiters>
