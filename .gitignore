@@ -34,3 +34,7 @@ XPath.pdf
 waiters1.xml
 XPath_big.pdf
 3/logic/__pycache__/usecase.cpython-311.pyc
+3/model/__pycache__/fun.cpython-311.pyc
+3/model/__pycache__/models.cpython-311.pyc
+3/model/__pycache__/order.cpython-311.pyc
+3/Test/__pycache__/test_order.cpython-311.pyc

@@ -27,12 +27,12 @@ class Order:
             return False
         return self.order_id == other.order_id
     
-class dish_to_order:
-    def __init__(self):
-        self.order_id = None
-        self.item_id = None
+# class dish_to_order:
+#     def __init__(self):
+#         self.order_id = None
+#         self.item_id = None
         
-class drink_to_order:
-    def __init__(self):
-        self.order_id = None
-        self.item_id = None
+# class drink_to_order:
+#     def __init__(self):
+#         self.order_id = None
+#         self.item_id = None
