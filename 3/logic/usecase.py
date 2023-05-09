@@ -9,5 +9,3 @@ class WaiterToXML:
         waiter = Waiter(name, birthdate)
         repo.add(waiter)
 
-
-
