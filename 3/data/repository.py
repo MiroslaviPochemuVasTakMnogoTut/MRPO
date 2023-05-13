@@ -58,59 +58,82 @@ class SQLRepository(Repository):
 
 class XMLWaiter(Repository):
     def __init__(self, model_class):
-        with open('3/waiters.xml', 'rb') as file:
+        self.db_file ='3/db.xml'
+        with open('3/db.xml', 'rb') as file:
             xml = file.read()
-        self.tree = ET.parse('3/waiters.xml')
+        self.tree = ET.parse('3/db.xml')
         self.root = self.tree.getroot()
         self.xtree = etree.fromstring(xml)
     
-    def add(self, entity):
-
-        xpath_expr = "//id"
-        ids = self.xtree.xpath(xpath_expr)
-        lids = [int(i.text) for i in ids]
-        # Создать новый элемент
-        nw = ET.SubElement(self.root, 'waiter')
-        ids = self.xtree.xpath('//id')
-        id  = ET.SubElement(nw, 'id')
-        nam = ET.SubElement(nw, 'name')
-        bd = ET.SubElement(nw, 'birthdate')
-        id.text = str(max(lids)+1)
-        nam.text = entity.name
-        bd.text = entity.birthdate
-        # nw.set('id',        f'{max(lids)+1}')
-        # nw.set('name',      f'{entity.name}')
-        # nw.set('birthdate', f'{entity.birthdate}')
-        # Записать изменения в файл
+    def add(self, item:dict, table_name):
+        new_item = ET.Element('row')
+        table = self.root.find(f'./table[@name="{table_name}"]')
+        ids = table.findall('row/field[@name="id"]')
+        nid = max([int(i.text) for i in ids]) + 1
+        xid = ET.SubElement(new_item, 'field')
+        xid.set('name', 'id')
+        xid.text = str(nid)
+        for atr in item.keys():
+            at =ET.SubElement(new_item, 'field')
+            at.set('name', atr)
+            at.text = item[atr]
+        # print(item.keys())
+        table.append(new_item)
         self.tree.write('waiters1.xml')
         
-    def remove(self, id):
-        xpath_expr = "//id"
-        ids = self.xtree.xpath(xpath_expr)
-        lids = [int(i.text) for i in ids]
-        if id in lids:
-            fired = self.root.find(f'./waiter[id="{id}"]')
-            self.root.remove(fired)
-        # else:
+    def remove(self, id, table_name:str):
+        items = self.root.find(f'./table[@name="{table_name}"]')
+        # fired = items.find(f'./row[field[@name="id"]="1"]')
+        fired = None
+        for item in items:
+            if (fired is not None):
+                break
+            fids = item.findall(f'./field[@name="id"]')
+            for fid in fids:
+                # print(fid.text)
+                if int(fid.text) == id:
+                    fired = item
+                    break
+                else:
+                    return False
+        items.remove(fired)
+        self.tree.write('waiters1.xml')
+        return True
             
     
     
-    def update(self, entity):
-        waiter = self.root.find(f"./waiter[id='{entity.id}']")
-        waiter.find('name').text = entity.name
-        waiter.find('birthdate').text = entity.birthdate
+    def update(self, id, nitem:dict, table_name):
+        upd:ET.Element = self.get_by_id(id, table_name)
+        for fld in nitem.keys():
+            ufield = upd.find(f'./field[@name="{fld}"]')
+            ufield.text = nitem[fld]
         self.tree.write('waiters1.xml')
         
         
-    def get_all(self):
-        al = []
-        for w in self.root:
-            id = int(w.find('id').text)
-            name = w.find('name').text
-            birthdate = w.find('birthdate').text
+    def get_all(self, table_name):
+        items = []
+        for item in self.root.findall(f'./table[@name="{table_name}"]/row'):
+            waiter ={}
+            for wtr in item:
+                waiter[wtr.attrib['name']] = wtr.text
+            items.append(waiter)
+                
+        return items
             
-    def get_by_id(self, id):
-        pass
+    def get_by_id(self, id, table_name)->ET.Element:
+        items = self.root.find(f'./table[@name="{table_name}"]')
+        # fired = items.find(f'./row[field[@name="id"]="1"]')
+        fnd = None
+        for item in items:
+            if (fnd is not None):
+                break
+            fids = item.findall(f'./field[@name="id"]')
+            for fid in fids:
+                # print(fid.text)
+                if int(fid.text) == id:
+                    fnd = item
+                    break
+        return fnd 
     
 class FakeRepo(Repository):
     def __init__(self):

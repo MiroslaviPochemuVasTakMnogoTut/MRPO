@@ -1,0 +1,29 @@
+<database>
+  <table name="waiters">
+    <row>
+      <field name="id">1</field>
+      <field name="name">John Doe</field>
+      <field name="birthdate">1990-05-15</field>
+      <field name="phone">1234567890</field>
+    </row>
+    <row>
+      <field name="id">2</field>
+      <field name="name">Jane Smith</field>
+      <field name="birthdate">1985-10-20</field>
+      <field name="phone">9876543210</field>
+    </row>
+  </table>
+  
+  <table name="orders">
+    <row>
+      <field name="id">1</field>
+      <field name="waiter_id">1</field>
+      <field name="table_number">5</field>
+    </row>
+    <row>
+      <field name="id">2</field>
+      <field name="waiter_id">2</field>
+      <field name="table_number">3</field>
+    </row>
+  </table>
+</database>
