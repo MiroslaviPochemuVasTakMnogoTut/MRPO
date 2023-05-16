@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
-from data.repository import Repository, SQLRepository, FakeRepo, XMLRepo
+from data.repository import Repository, SQLRepository, FakeRepo, XMLRepo, JsonRepo
 import xml.etree.ElementTree as ET
 from lxml import etree
 
@@ -33,7 +33,7 @@ class SqlUoW(AbstractUoW):
     def __enter__(self):
         self.session = self.session_factory()
         self.repo = SQLRepository(self.session, self.model_class)
-        return super().__enter__()
+        # return super().__enter__()
     
     def __exit__(self, *args):
         super().__exit__(*args)
@@ -68,7 +68,25 @@ class XMLUoW(AbstractUoW):
         
     def rollback(self):
         self.tree = self.copy
-         
+
+
+class JsonUoW(AbstractUoW):
+    def __init__(self, file='3/db.json'):
+        self.db_file = file
+    
+    def __enter__(self):
+        self.repo = JsonRepo(self.db_file)
+        # self.data = self.repo.load_data()
+        
+    def __exit__(self, *args):
+        super().__exit__(*args)
+        self.repo.save()
+        
+    def commit(self):
+        self.repo.save()
+        
+    def rollback(self):
+        pass
         
 class FakeUoW(AbstractUoW):
     def __init__(self):

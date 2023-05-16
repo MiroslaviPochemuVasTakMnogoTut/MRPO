@@ -30,13 +30,13 @@ def add_waiter(waiter:Waiter, uow: AbstractUoW):
     with uow :
         uow.repo.add(waiter)
         
-def update_waiter(waiter:Waiter, uow:AbstractUoW):
+def update_waiter(waiter:dict, uow:AbstractUoW):
     with uow :
-        uow.repo.update(waiter)
+        return uow.repo.update(waiter)
         
-def remove_waiter(waiter:Waiter, uow:AbstractUoW):
+def remove_waiter(id, uow:AbstractUoW):
     with uow :
-        uow.repo.remove(waiter)
+        uow.repo.remove(id)
         
 def get_waiter(id, uow:AbstractUoW):
     with uow :

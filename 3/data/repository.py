@@ -30,13 +30,6 @@ class Repository(ABC):
         pass
 
 class SQLRepository(Repository):
-    # def __init__(self, model_class):
-    #     self.model_class = model_class
-    #     engine = create_engine('postgresql://postgres:123@127.0.0.1:15432/WP')
-    #     Base.metadata.create_all(engine)
-    #     Session = sessionmaker(bind=engine)
-    #     self.session = Session() # UoW
-        
     def __init__(self, session, model_class):
         self.model_class = model_class
         self.session = session
@@ -73,7 +66,7 @@ class XMLRepo(Repository):
         #     xml = file.read()
         # self.xtree = etree.fromstring(xml)
     
-    def add(self, item:dict, table_name):
+    def add(self, item:dict, table_name='waiters'):
         new_item = ET.Element('row')
         table = self.root.find(f'./table[@name="{table_name}"]')
         ids = table.findall('row/field[@name="id"]')
@@ -89,7 +82,7 @@ class XMLRepo(Repository):
         table.append(new_item)
         self.tree.write('waiters1.xml')
         
-    def remove(self, id, table_name:str):
+    def remove(self, id, table_name:str='waiters'):
         items = self.root.find(f'./table[@name="{table_name}"]')
         # fired = items.find(f'./row[field[@name="id"]="1"]')
         fired = None
@@ -109,7 +102,7 @@ class XMLRepo(Repository):
         return True
             
     
-    def update(self, id, nitem:dict, table_name):
+    def update(self, id, nitem:dict, table_name='waiters'):
         upd:ET.Element = self.get_by_id(id, table_name)
         for fld in nitem.keys():
             ufield = upd.find(f'./field[@name="{fld}"]')
@@ -117,7 +110,7 @@ class XMLRepo(Repository):
         self.tree.write('waiters1.xml')
         
         
-    def get_all(self, table_name):
+    def get_all(self, table_name='waiters'):
         items = []
         for item in self.root.findall(f'./table[@name="{table_name}"]/row'):
             waiter ={}
@@ -127,7 +120,7 @@ class XMLRepo(Repository):
                 
         return items
             
-    def get_by_id(self, id, table_name)->ET.Element:
+    def get_by_id(self, id, table_name='waiters')->ET.Element:
         items = self.root.find(f'./table[@name="{table_name}"]')
         # fired = items.find(f'./row[field[@name="id"]="1"]')
         fnd = None
@@ -152,21 +145,23 @@ class JsonRepo(Repository):
         with open(self.filename, 'r') as file:
             return json.load(file)
 
-    def save_data(self):
+    def save(self):
         with open(self.filename, 'w') as file:
             json.dump(self.data, file, indent=2)
 
     def add(self, item):
         # Генерируем уникальный идентификатор для элемента
-        id = str(max([int(i['id']) for i in self.data['database']['tables']['waiters']]))
+        id = str(max([int(i['id']) for i in self.data['database']['tables']['waiters']])+1)
         item['id'] = id
-        self.data.append(item)
-        self.save_data()
+        self.data['database']['tables']['waiters'].append(item)
+        self.save()
 
-    def remove(self, item):
-        # item - объект, который нужно удалить
-        self.data = [x for x in self.data['database']['tables']['waiters'] if x['id'] != item['id']]
-        self.save_data()
+    def remove(self, id):
+        self.data['database']['tables']['waiters'] = [x for x in 
+                                                      self.data['database']
+                                                               ['tables']
+                                                               ['waiters'] if x['id'] != id]
+        self.save()
 
     def get_all(self):
         # Получение всех элементов из репозитория
@@ -179,12 +174,13 @@ class JsonRepo(Repository):
     def update(self, entity):
         # Обновление элемента в репозитории
         # entity - объект, который нужно обновить
-        for item in self.data['database']['tables']['waiters']:
-            for row in item['rows']:
-                if row['id'] == entity['id']:
-                    row = entity
-                    self.save_data()
-                    return True
+        self.remove(entity['id'])
+        self.data['database']['tables']['waiters'].append(entity)
+        # for item in self.data['database']['tables']['waiters']:
+        #     if item['id'] == entity['id']:
+        #         item = entity
+        #         self.save()
+        #         return True
         return False
 
 class FakeRepo(Repository):
