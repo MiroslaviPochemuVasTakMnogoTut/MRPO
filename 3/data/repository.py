@@ -4,7 +4,8 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 import xml.etree.ElementTree as ET
 from lxml import etree
-
+import json
+# import requests
 
 Base = declarative_base()
  
@@ -24,14 +25,21 @@ class Repository(ABC):
     @abstractmethod
     def get_by_id(self, id):
         pass
+    @abstractmethod
+    def update(self, entity):
+        pass
 
 class SQLRepository(Repository):
-    def __init__(self, model_class):
+    # def __init__(self, model_class):
+    #     self.model_class = model_class
+    #     engine = create_engine('postgresql://postgres:123@127.0.0.1:15432/WP')
+    #     Base.metadata.create_all(engine)
+    #     Session = sessionmaker(bind=engine)
+    #     self.session = Session() # UoW
+        
+    def __init__(self, session, model_class):
         self.model_class = model_class
-        engine = create_engine('postgresql://postgres:123@127.0.0.1:15432/WP')
-        Base.metadata.create_all(engine)
-        Session = sessionmaker(bind=engine)
-        self.session = Session() # UoW
+        self.session = session
 
 
     def get_all(self):
@@ -56,14 +64,14 @@ class SQLRepository(Repository):
         self.session.delete(entity)
         self.session.commit()
 
-class XMLWaiter(Repository):
-    def __init__(self, model_class):
+class XMLRepo(Repository):
+    def __init__(self, tree: ET.ElementTree):
         self.db_file ='3/db.xml'
-        with open('3/db.xml', 'rb') as file:
-            xml = file.read()
-        self.tree = ET.parse('3/db.xml')
+        self.tree = tree
         self.root = self.tree.getroot()
-        self.xtree = etree.fromstring(xml)
+        # with open('3/db.xml', 'rb') as file:
+        #     xml = file.read()
+        # self.xtree = etree.fromstring(xml)
     
     def add(self, item:dict, table_name):
         new_item = ET.Element('row')
@@ -101,7 +109,6 @@ class XMLWaiter(Repository):
         return True
             
     
-    
     def update(self, id, nitem:dict, table_name):
         upd:ET.Element = self.get_by_id(id, table_name)
         for fld in nitem.keys():
@@ -134,10 +141,55 @@ class XMLWaiter(Repository):
                     fnd = item
                     break
         return fnd 
-    
+
+
+class JsonRepo(Repository):
+    def __init__(self, filename):
+        self.filename = filename
+        self.data = self.load_data()
+
+    def load_data(self):
+        with open(self.filename, 'r') as file:
+            return json.load(file)
+
+    def save_data(self):
+        with open(self.filename, 'w') as file:
+            json.dump(self.data, file, indent=2)
+
+    def add(self, item):
+        # Генерируем уникальный идентификатор для элемента
+        id = str(max([int(i['id']) for i in self.data['database']['tables']['waiters']]))
+        item['id'] = id
+        self.data.append(item)
+        self.save_data()
+
+    def remove(self, item):
+        # item - объект, который нужно удалить
+        self.data = [x for x in self.data['database']['tables']['waiters'] if x['id'] != item['id']]
+        self.save_data()
+
+    def get_all(self):
+        # Получение всех элементов из репозитория
+        return self.data['database']['tables']['waiters']
+
+    def get_by_id(self, id):
+        # Получение элемента по его идентификатору
+        return next((x for x in self.data['database']['tables']['waiters'] if x['id'] == id), None)
+
+    def update(self, entity):
+        # Обновление элемента в репозитории
+        # entity - объект, который нужно обновить
+        for item in self.data['database']['tables']['waiters']:
+            for row in item['rows']:
+                if row['id'] == entity['id']:
+                    row = entity
+                    self.save_data()
+                    return True
+        return False
+
 class FakeRepo(Repository):
-    def __init__(self):
-        self.base = []
+    def __init__(self, base=[]):
+        self.base = base
         pass
     def add(self, item):
         self.base.append(item)

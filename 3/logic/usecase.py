@@ -1,9 +1,11 @@
-from data.repository import XMLWaiter
+from data.repository import XMLRepo
 from model.waiter import Waiter
+# from data.modelDB.waiterDB import WaiterDB
+from data.uow import AbstractUoW
 
 class WaiterToXML:
     def __init__(self):
-        self.repo  = XMLWaiter(Waiter)
+        self.repo  = XMLRepo(Waiter)
     def add(self, name, birthdate):
 
         waiter = {'name': name, 'birthdate': birthdate}
@@ -23,3 +25,34 @@ class WaiterToXML:
         for wtr in waiters:
             lst.append(Waiter(wtr['name'], wtr['birthdate']))
         return lst
+    
+def add_waiter(waiter:Waiter, uow: AbstractUoW):
+    with uow :
+        uow.repo.add(waiter)
+        
+def update_waiter(waiter:Waiter, uow:AbstractUoW):
+    with uow :
+        uow.repo.update(waiter)
+        
+def remove_waiter(waiter:Waiter, uow:AbstractUoW):
+    with uow :
+        uow.repo.remove(waiter)
+        
+def get_waiter(id, uow:AbstractUoW):
+    with uow :
+        return uow.repo.get_by_id(id)
+def get_waiters(uow:AbstractUoW):
+    with uow :
+        return uow.repo.get_all()
+
+
+
+
+
+    # wtr = {'id':waiter.id,
+    #        'name':waiter.name,
+    #        'birthdate':waiter.birthdate,
+    #        'phone':waiter.phone}
+    # wtr = {'name':waiter.name,
+    #        'birthdate':waiter.birthdate,
+    #        'phone':waiter.phone}
