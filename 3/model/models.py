@@ -43,7 +43,27 @@ class Table:
         self.capacity = 4
         self.is_available = True
         self.waiter :str= ''
+        self.state = 'available'
         
+    def status(self):
+        while True:
+            event = yield self.state # Генератор yield, используется как корутина для асинхронного вызова
+            if self.state == 'Free': # 
+                if event == 'Occupy Table':
+                    self.state = 'Occupied'
+                elif event == 'Reserve Table':
+                    self.state = 'Reserved'
+            elif self.state == 'Occupied':
+                if event == 'Free Table':
+                    self.state = 'Free'
+                elif event == 'Reserve Table':
+                    self.state = 'Reserved'
+            elif self.state == 'Reserved':
+                if event == 'Cancel Reservation':
+                    self.state = 'Free'
+                elif event == 'Occupy Table':
+                    self.state = 'Occupied'
+                    
 
     def __eq__(self, other):
         if not isinstance(other, Table):

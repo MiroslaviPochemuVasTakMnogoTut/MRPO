@@ -137,7 +137,7 @@ class XMLRepo(Repository):
 
 
 class JsonRepo(Repository):
-    def __init__(self, filename):
+    def __init__(self, filename='db.json'):
         self.filename = filename
         self.data = self.load_data()
 
