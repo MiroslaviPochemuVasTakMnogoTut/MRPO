@@ -1,7 +1,7 @@
 from data.repository import *
 from data.uow import *
 
-class WaiterSerializer:
+class RepositoryFactory:
     def repositize(self, format):
         serializer = get_repositizer(format)
         return serializer()
