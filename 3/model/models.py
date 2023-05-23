@@ -36,6 +36,13 @@ class Waiter(Employee):
         super().__init__(name, birthdate)
         self.tables_served = []
         
+    def serialize(self, serializer):
+        # serializer - это объект сериализатора
+        serializer.start_object('waiter', self.id)
+        serializer.add_property('name', self.name)
+        serializer.add_property('phone', self.phone)
+        return serializer.to_str()
+        
 class Table:
     def __init__(self, number: int):
         self.id = None
@@ -54,7 +61,7 @@ class Table:
                 elif event == 'Reserve Table':
                     self.state = 'Reserved'
             elif self.state == 'Occupied':
-                if event == 'Free Table':
+                if event == 'Free Table':   
                     self.state = 'Free'
                 elif event == 'Reserve Table':
                     self.state = 'Reserved'
